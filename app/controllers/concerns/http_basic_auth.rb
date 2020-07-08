@@ -14,4 +14,9 @@ module HttpBasicAuth
       @current_user&.valid_password?(password)
     end
   end
+
+  def basic_auth_sign_out
+    template_path = 'layouts/basic_auth/sign_out'
+    render layout: false, template: template_path, status: :unauthorized and return
+  end
 end
