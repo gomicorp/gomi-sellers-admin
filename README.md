@@ -29,3 +29,7 @@ EcommerceAPI ([github](https://github.com/gomicorp/EcommerceAPI)) 가 마이그�
 $ rails db:migrate        # rails db:schema:dump 로 동작 
 $ rails db:schema:load    # rails db:schema:dump 로 동작
 ```
+
+## 기능
+
+기능 목록은 [여기]()에서 확인하세요.
