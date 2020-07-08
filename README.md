@@ -32,4 +32,4 @@ $ rails db:schema:load    # rails db:schema:dump 로 동작
 
 ## 기능
 
-기능 목록은 [여기]()에서 확인하세요.
+기능 목록은 [여기](https://github.com/gomicorp/GomiSellersAdmin/tree/master/documents/features) 에서 확인하세요.
