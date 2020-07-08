@@ -17,10 +17,12 @@
 # app/controllers/application_controller.rb
 
 class ApplicationController < ActionController::Base
+  include HttpBasicAuth
+
   ...
-  before_action :admin_auth 
-    OR
-  include AdminAuth
+
+  before_action :basic_admin_authenticate
+
   ...
 end
 ```
@@ -30,7 +32,7 @@ end
 # app/controllers/foo_controller.rb
 
 class FooController < ApplicationController
-  skip_before_action :admin_auth, on: :show
+  skip_before_action :basic_admin_authenticate, on: :show
 end
 ```
 
