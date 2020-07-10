@@ -1,6 +1,5 @@
 class Brand < NationRecord
   include Translatable
-  include Approvable
   extend_has_one_attached :logo
   translate_column :name
 
@@ -26,8 +25,4 @@ class Brand < NationRecord
     pixel_id.present?
   end
 
-  # Company::ApproveRequest
-  class ApproveRequest < ::ApproveRequest
-    default_scope { where(approvable_type: :Brand) }
-  end
 end
