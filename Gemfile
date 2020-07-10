@@ -48,6 +48,7 @@ gem 'simple_trans', git: 'https://github.com/yhk1038/simple_trans.git'
 gem 'bcrypt', '~> 3.1.7'
 # admin builder
 gem 'activeadmin'
+gem 'paper_trail'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
