@@ -9,7 +9,7 @@ ActiveAdmin.register Sellers::SellerInfo do
       link_to seller_info.seller.name, admin_sellers_seller_info_path(seller_info)
     end
     column :'phone number' do |seller_info|
-      para seller_info.seller
+      para seller_info.seller.phone_number
     end
     column :country
     column :'Cumulative number of sales' do |seller_info|
