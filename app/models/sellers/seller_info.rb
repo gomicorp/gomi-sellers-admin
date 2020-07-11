@@ -6,6 +6,9 @@ module Sellers
 
     has_many :permit_change_lists, class_name: 'Sellers::PermitChangeList'
     has_many :settlement_statements, class_name: 'Sellers::SettlementStatement'
+    has_many :order_sold_papers, class_name: 'Sellers::OrderSoldPaper'
+
+    has_many :order_infos, through: :order_sold_papers
 
     def permit_status
       permit_change_lists.last.permit_status
