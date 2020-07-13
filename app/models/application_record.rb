@@ -3,6 +3,39 @@ class ApplicationRecord < ActiveRecord::Base
   extend ParseCountryCode
   include TimeMachine::Concern
 
+  def self.default_country=(var)
+    @default_country = Country.where(name: var)
+  end
+
+  #
+  # Current Country
+  #
+
+  # class method
+  def self.current_country
+    @current_country ||= Country.at(ENV['APP_COUNTRY'])
+  end
+
+  # instance method
+  def current_country
+    @current_country ||= self.class.current_country
+  end
+
+
+  #
+  # Current Currency
+  #
+
+  # class method
+  def self.current_currency
+    @current_currency ||= Money::Currency.wrap(current_country.iso_code)
+  end
+
+  # instance method
+  def current_currency
+    @current_currency ||= self.class.current_currency
+  end
+
   def cls
     self.class
   end

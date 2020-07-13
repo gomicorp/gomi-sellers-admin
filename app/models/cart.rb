@@ -6,10 +6,6 @@ class CartCalculator
     @items = cart.items
   end
 
-  # def price_sum
-  #   items.map(&:price_sum).sum
-  # end
-
   # 품목 단위 수량 합계
   def unit_count
     items.map(&:unit_count_sum).sum
@@ -31,15 +27,20 @@ class CartCalculator
     items.map(&:price_change_sum).sum
   end
 
+  # 할인/변동을 반영한 상품 총 합계 가격
+  # 정가 총 합계 + 변동가 합계
+  def price_sum
+    base_price_sum + discount_amount
+  end
+
   def delivery_amount
     cart.delivery_amount.to_i
   end
 
   def final_result_price
-    base_price_sum + discount_amount + delivery_amount
+    price_sum + delivery_amount
   end
 end
-
 
 class Cart < NationRecord
   # 신규(desk) 입금대기(pay) 결제완료(paid) 배송준비(ship_ready) 배송중(ship_ing) 취소요청(cancel-request) 반품요청(refund-request) 환불실패 보관함(complete)
@@ -84,9 +85,20 @@ class Cart < NationRecord
     calculator.discount_amount
   end
 
-  alias_method :_delivery_amount, :delivery_amount
+  alias _delivery_amount delivery_amount
+
   def delivery_amount
-    _delivery_amount || ShipInfo.fee_table(unit_count < 3 ? 'express' : 'bulk_express') # 배송비
+    return 0 if items.empty?
+
+    #== TODO: ship_type 헬퍼 메소드가 생기면 사라질 코드입니다 ==
+    ship_type = case current_country.short_name
+                when 'th'
+                  unit_count < 3 ? 'express' : 'bulk_express'
+                else
+                  'normal'
+                end
+    _delivery_amount || ShipInfo.fee_table(ship_type) # 배송비
+    #====
   end
 
   # 총 합계 (최종 결제액)
@@ -94,9 +106,10 @@ class Cart < NationRecord
     calculator.final_result_price
   end
 
-  # def price_sum
-  #   calculator.price_sum # 총 상품 가격
-  # end
+  # 총 상품 가격 (할인 반영 총 합계)
+  def price_sum
+    calculator.price_sum
+  end
 
   def sender_name
     user.name
