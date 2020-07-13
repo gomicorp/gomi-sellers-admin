@@ -12,16 +12,18 @@ ActiveAdmin.register Sellers::SellerInfo do
       para seller_info.seller.phone_number
     end
     column :country
-    column :'Cumulative number of sales' do |seller_info|
-      seller_info.order_sold_papers.count
+    column :'Cumulative count of sales' do |seller_info|
+      para seller_info.order_sold_papers.count
     end
     column :'Cumulative sales amount' do |seller_info|
-      seller_info.order_infos.sum do |order_info|
-        order_info.payment.total_price_sum
-      end
+      para currency_format seller_info.cumulative_amount
+      # sales_amount = seller_info.order_infos.sum do |order_info|
+      #   order_info.payment.total_price_sum
+      # end
+      # currency_format sales_amount
     end
     column :status do |seller_info|
-      seller_info.permit_status.name
+      para seller_info.permit_status.name
     end
     column :'joined date' do |seller_info|
       joined_date = seller_info.created_at.tap do |time|
@@ -30,6 +32,10 @@ ActiveAdmin.register Sellers::SellerInfo do
       end
       para joined_date
     end
+  end
+
+  show do
+
   end
 
   # See permitted parameters documentation:

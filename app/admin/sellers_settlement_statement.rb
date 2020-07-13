@@ -13,7 +13,7 @@ ActiveAdmin.register Sellers::SettlementStatement do
     end
     column :country
     column :'settlement amount' do |settlement_statement|
-      para settlement_statement.settlement_amount
+      para currency_format settlement_statement.settlement_amount
     end
     column :status do |settlement_statement|
       para settlement_statement.status

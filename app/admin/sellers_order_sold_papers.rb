@@ -6,7 +6,7 @@ ActiveAdmin.register Sellers::OrderSoldPaper do
       link_to order_sold_paper.order_info.enc_id, admin_sellers_order_sold_paper_path(order_sold_paper)
     end
     column :total_product_price do |order_sold_paper|
-      para order_sold_paper.order_info.payment.total_price_sum
+      para currency_format order_sold_paper.order_info.payment.total_price_sum
     end
     column :'seller\'s profit' do |order_sold_paper|
       para order_sold_paper.adjusted_profit
