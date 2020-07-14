@@ -68,7 +68,6 @@ Seller.all.each do |seller|
     ap 'created'
     ap seller_info
   end
-  seller.seller_info.permit_change_lists << Sellers::PermitChangeList.new(permit_status: Sellers::PermitStatus.applied)
 end
 
 ApplicationRecord.transaction do
@@ -82,9 +81,9 @@ ApplicationRecord.transaction do
 end
 
 #=== selected_product ===#
-#live_products => 판매중이고 옵션이 있는 상품
+#live_products => 판매중이고, 디폴트 옵션이 잔여 수량이 있는 상품
 live_products = Product.running.select do |product|
-  product.options.any?
+  product.default_option && !product.default_option.available_quantity.zero?
 end
 # live_products중의 하나를 셀러의 스토어에 연결
 ApplicationRecord.transaction do
@@ -99,7 +98,7 @@ end
 #=== order by seller store ===#
 #=== order sold paper ===#
 #ship_info_samples => 기존에 존재하는 가장 최근의 5개 ship info에서 reference와 timestamp를 제거, 샘플값으로 활용
-ship_info_samples = ShipInfo.last(5).map do |ship_info|
+ship_info_samples = OrderInfo.last(5).map(&:ship_info).map do |ship_info|
   ship_info.attributes.tap do |sample|
     sample.delete('id')
     sample.delete('order_info_id')
@@ -110,7 +109,7 @@ ship_info_samples = ShipInfo.last(5).map do |ship_info|
 end
 
 ApplicationRecord.transaction do
-  Sellers::StoreInfo.all.sample(5).each do |seller_store|
+  Sellers::SellerInfo.permitted.map(&:store_info).each do |seller_store|
     #셀러의 스토어에 존재하는 상품 한개
     product = seller_store.selected_products.first.product
     #current cart가 비어있어, 상품을 추가하고 주문 생성이 가능한 user 한명
@@ -119,9 +118,9 @@ ApplicationRecord.transaction do
     end.sample
     #대상 카트
     cart = orderer.current_cart
-    #카트에 product를 넣습니다.
+    #카트에 product option를 넣습니다.
     cart_item_service = Sellers::CartItemService.new(cart)
-    cart_item_service.plus(product.options.first.id, 1)
+    cart_item_service.plus(product.default_option.id, 1)
     order_param = {
       cart_id: cart.id,
       channel: Channel.default_channel

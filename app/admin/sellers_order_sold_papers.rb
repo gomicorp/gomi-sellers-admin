@@ -9,7 +9,7 @@ ActiveAdmin.register Sellers::OrderSoldPaper do
       para currency_format order_sold_paper.order_info.payment.total_price_sum
     end
     column :'seller\'s profit' do |order_sold_paper|
-      para order_sold_paper.adjusted_profit
+      para currency_format order_sold_paper.adjusted_profit
     end
     column :'seller name' do |order_sold_paper|
       para order_sold_paper.seller_info.seller.name

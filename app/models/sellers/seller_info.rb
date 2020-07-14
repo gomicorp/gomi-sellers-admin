@@ -6,15 +6,15 @@ module Sellers
     belongs_to :grade, class_name: 'Sellers::Grade'
 
     has_many :permit_change_lists, class_name: 'Sellers::PermitChangeList', dependent: :destroy
+    has_one :permission, -> { order('created_at DESC') }, class_name: 'Sellers::PermitChangeList'
+    has_one :permit_status, through: :permission
+
     has_many :settlement_statements, class_name: 'Sellers::SettlementStatement'
     has_many :order_sold_papers, class_name: 'Sellers::OrderSoldPaper'
 
     has_many :order_infos, through: :order_sold_papers
 
-    def permit_status
-      init_permit_status! if permit_change_lists.empty?
-      permit_change_lists.last.permit_status
-    end
+    scope :permitted, -> { where(permission: Sellers::PermitChangeList.where(permit_status: Sellers::PermitStatus.permitted)) }
 
     def play_permit!(reason=nil)
       permit_change_lists << Sellers::PermitChangeList.new(
@@ -40,7 +40,7 @@ module Sellers
       if order_sold_paper.nil?
         update_columns(
           cumulative_amount: order_infos.map(&:payment).sum(&:total_price_sum),
-          cumulative_profit: order_infos.map(&:order_sold_paper).sum(&:adjusted_profit)
+          cumulative_profit: order_sold_papers.sum(&:adjusted_profit)
         )
       else
         order_info = order_sold_paper.order_info

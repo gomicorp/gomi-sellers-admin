@@ -43,7 +43,7 @@ module Sellers
           cart.items.each(&:capture_price_fields!)
 
           # 6. associate seller info
-          order_sold_paper = Sellers::OrderSoldPaper.new(
+          order_sold_paper = Sellers::OrderSoldPaper.create(
             order_info: order_info,
             seller_info: seller.seller_info,
             adjusted_profit: order_info.payment.total_price_sum * seller.seller_info.grade.commission_rate

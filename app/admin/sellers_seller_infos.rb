@@ -2,6 +2,9 @@ ActiveAdmin.register Sellers::SellerInfo do
 
   index do
     selectable_column
+    column :'index' do |seller_info|
+      para seller_info.seller.id
+    end
     column :email do |seller_info|
       para seller_info.seller.email
     end
@@ -17,13 +20,9 @@ ActiveAdmin.register Sellers::SellerInfo do
     end
     column :'Cumulative sales amount' do |seller_info|
       para currency_format seller_info.cumulative_amount
-      # sales_amount = seller_info.order_infos.sum do |order_info|
-      #   order_info.payment.total_price_sum
-      # end
-      # currency_format sales_amount
     end
     column :status do |seller_info|
-      para seller_info.permit_status.name
+      para seller_info.permit_status.status
     end
     column :'joined date' do |seller_info|
       joined_date = seller_info.created_at.tap do |time|
