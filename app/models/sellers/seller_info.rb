@@ -15,6 +15,11 @@ module Sellers
     has_many :order_infos, through: :order_sold_papers
 
     scope :permitted, -> { where(permission: Sellers::PermitChangeList.where(permit_status: Sellers::PermitStatus.permitted)) }
+    scope :applied, -> { where(permission: Sellers::PermitChangeList.where(permit_status: Sellers::PermitStatus.applied)) }
+
+    delegate :name, to: :seller
+    delegate :email, to: :seller
+    delegate :phone_number, to: :seller
 
     def play_permit!(reason=nil)
       permit_change_lists << Sellers::PermitChangeList.new(

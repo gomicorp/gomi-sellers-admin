@@ -7,7 +7,7 @@ ActiveAdmin.register OrderInfo do
       order_info.id
     end
     column :order_number do |order_info|
-      link_to order_info.enc_id, admin_order_info_path(order_info)
+      link_to order_info.enc_id, order_info_path(order_info)
     end
     column :total_product_price do |order_info|
       para order_info.payment.total_price_sum

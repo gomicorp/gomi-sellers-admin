@@ -14,6 +14,8 @@ class OrderInfo < NationRecord
   has_many :brands, through: :order_info_brands
   # ===============================================
 
+  has_one :order_sold_paper, class_name: 'Sellers::OrderSoldPaper'
+
   validates_presence_of :cart_id, :enc_id
   validates_uniqueness_of :cart_id, :enc_id
 
@@ -49,6 +51,6 @@ class OrderInfo < NationRecord
   end
 
   def quantity
-    cart.items.sum(:barcode_count)
+    cart.items.map(&:option_count).sum
   end
 end
