@@ -1,12 +1,12 @@
-ActiveAdmin.register Sellers::SettlementStatement do
+ActiveAdmin.register Sellers::SettlementStatement, as: 'Settlement' do
 
   index do
     selectable_column
     column :email do |settlement_statement|
-      para settlement_statement.seller.seller.email
+      para settlement_statement.seller_info.seller.email
     end
     column :'seller name' do |settlement_statement|
-      para settlement_statement.seller_info.seller.name
+      link_to settlement_statement.seller_info.name, settlement_path(settlement_statement)
     end
     column :'phone number' do |settlement_statement|
       para settlement_statement.seller_info.seller.phone_number
@@ -19,19 +19,66 @@ ActiveAdmin.register Sellers::SettlementStatement do
       para settlement_statement.status
     end
     column :'requested time' do |settlement_statement|
-      requested_time = settlement_statement.requested_at.tap do |time|
-        return '-' if time.nil?
-        time.strftime('%Y-%m-%d %H:%M:%S')
-      end
-      para requested_time
+      para settlement_statement.requested_at&.strftime('%Y-%m-%d %H:%M:%S')
     end
     column :'accepted time' do |settlement_statement|
-      accepted_time = settlement_statement.accepted_at.tap do |time|
-        return '-' if time.nil?
+      para settlement_statement.accepted_at&.strftime('%Y-%m-%d %H:%M:%S')
+    end
+  end
 
-        time.strftime('%Y-%m-%d %H:%M:%S')
+  show do
+    h1 '출금 정보'
+    div class: 'column_table' do
+      columns style: "max-width: 1400px;" do
+        column span: 1 do
+          span class: 'th' do '신청 상태' end
+        end
+        column span: 2 do
+          status_tag(settlement.status)
+          span class: 'd-block' do
+            settlement.status_changed_at
+          end
+        end
+        column span: 1 do
+          span class: 'th' do '신청 계좌' end
+        end
+        column span: 2 do
+          #TODO : account info가 독립적인 값으로 쓰여져 저장돼야 할 필요가 있습니다.
+          account = settlement.seller_info.account_info
+          span class: 'd-block' do
+            account.bank + '/' + account.owner_name
+          end
+          span class: 'd-block' do
+            account.account_number
+          end
+        end
+        column span: 1 do
+          span class: 'th' do '요청 금액' end
+        end
+        column span: 2 do
+          currency_format settlement.settlement_amount
+        end
       end
-      para accepted_time
+      columns style: "max-width: 1400px;" do
+        column span: 1 do
+          span '이메일'
+        end
+        column span: 2 do
+          span settlement.seller_info.seller.email
+        end
+        column span: 1 do
+          span '셀러명'
+        end
+        column span: 2 do
+          span settlement.seller_info.name
+        end
+        column span: 1 do
+          span '전화번호'
+        end
+        column span: 2 do
+          span settlement.seller_info.seller.phone_number
+        end
+      end
     end
   end
   # See permitted parameters documentation:
