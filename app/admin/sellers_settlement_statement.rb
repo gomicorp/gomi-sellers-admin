@@ -1,7 +1,7 @@
 ActiveAdmin.register Sellers::SettlementStatement, as: 'Settlement' do
+  actions :index, :show
 
-  index do
-    selectable_column
+  index download_links: [:csv] do
     column :email do |settlement_statement|
       para settlement_statement.seller_info.seller.email
     end

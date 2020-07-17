@@ -1,7 +1,7 @@
 ActiveAdmin.register Sellers::SellerInfo, as: 'Seller Info' do
+  actions :index, :show
+  index download_links: [:csv] do
 
-  index do
-    selectable_column
     column :'index' do |seller_info|
       para seller_info.seller.id
     end

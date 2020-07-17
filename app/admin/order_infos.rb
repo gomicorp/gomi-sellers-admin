@@ -2,7 +2,6 @@
 ActiveAdmin.register OrderInfo do
 
   index do
-    selectable_column
     column :order_id do |order_info|
       order_info.id
     end

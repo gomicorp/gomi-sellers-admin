@@ -1,7 +1,6 @@
 ActiveAdmin.register Sellers::OrderSoldPaper, as: 'Sales Info' do
+  actions :index, :show
 
-  index do
-    selectable_column
     column :order_number do |order_sold_paper|
       link_to order_sold_paper.order_info.enc_id, sales_info_path(order_sold_paper)
     end
