@@ -1,5 +1,8 @@
 ActiveAdmin.register Sellers::SellerInfo, as: 'Seller Info' do
   actions :index, :show
+  filter :seller_name_cont, label: 'Seller Name'
+  filter :permit_status
+
   index download_links: [:csv] do
 
     column :'index' do |seller_info|

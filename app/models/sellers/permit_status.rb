@@ -19,5 +19,9 @@ module Sellers
     def self.stopped
       STOPPED
     end
+
+    def name
+      status.to_sym
+    end
   end
 end

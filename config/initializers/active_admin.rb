@@ -332,3 +332,14 @@ ActiveAdmin.setup do |config|
 end
 
 # == Overriding for layouts
+module ActiveAdmin
+  module Filters
+    module ResourceExtension
+      private
+
+      def add_search_status_sidebar_section
+      end
+    end
+  end
+end
+

@@ -46,7 +46,7 @@ module Sellers
           order_sold_paper = Sellers::OrderSoldPaper.create(
             order_info: order_info,
             seller_info: seller.seller_info,
-            adjusted_profit: order_info.payment.total_price_sum * seller.seller_info.grade.commission_rate
+            adjusted_profit: order_info.payment.total_price_sum * seller.seller_info.commission_rate
           )
           # 7. update seller info cache
           seller.seller_info.update_counter_cache order_sold_paper

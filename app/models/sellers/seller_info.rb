@@ -20,6 +20,7 @@ module Sellers
     delegate :name, to: :seller
     delegate :email, to: :seller
     delegate :phone_number, to: :seller
+    delegate :commission_rate, to: :grade
 
     def play_permit!(reason=nil)
       permit_change_lists << Sellers::PermitChangeList.new(

@@ -1,5 +1,9 @@
 ActiveAdmin.register Sellers::SettlementStatement, as: 'Settlement' do
   actions :index, :show
+  filter :seller_info_seller_name_cont, label: 'Seller Name'
+  filter :status, as: :select, collection: Sellers::SettlementStatement.statuses
+  filter :requested_at, label: 'Requested date [yyyy-mm-dd]', as: :date_range
+  filter :accepted_at, label: 'Accepted date [yyyy-mm-dd]', as: :date_range
 
   index download_links: [:csv] do
     column :email do |settlement_statement|

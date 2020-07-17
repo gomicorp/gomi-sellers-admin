@@ -1,6 +1,10 @@
 ActiveAdmin.register Sellers::OrderSoldPaper, as: 'Sales Info' do
   actions :index, :show
+  filter :seller_info_seller_name_cont, label: 'Seller Name'
+  filter :order_info_cart_order_status, label: 'Order status', as: :select, collection: -> { Cart.order_statuses }
+  filter :created_at, label: 'Ordered date [yyyy-mm-dd]', as: :date_range
 
+  index download_links: [:csv] do
     column :order_number do |order_sold_paper|
       link_to order_sold_paper.order_info.enc_id, sales_info_path(order_sold_paper)
     end
@@ -73,7 +77,7 @@ ActiveAdmin.register Sellers::OrderSoldPaper, as: 'Sales Info' do
       column(:'단위상품가격') { |item| currency_format item.captured_retail_price }
       column(:'판매수') { |item| item.option_count }
       column(:'총 판매 가격') { |item| currency_format item.captured_retail_price * item.option_count }
-      column(:'셀러 수수료') { |item| currency_format sales_info.seller_info.grade.commission_rate * (item.captured_retail_price * item.option_count) }
+      column(:'셀러 수수료') { |item| currency_format sales_info.seller_info.commission_rate * (item.captured_retail_price * item.option_count) }
     end
   end
 
