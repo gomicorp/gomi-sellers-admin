@@ -25,11 +25,7 @@ ActiveAdmin.register Sellers::SellerInfo, as: 'Seller Info' do
       para seller_info.permit_status.status
     end
     column :'joined date' do |seller_info|
-      joined_date = seller_info.created_at.tap do |time|
-        return '-' if time.nil?
-        time.strftime('%Y-%m-%d %H:%M:%S')
-      end
-      para joined_date
+      para seller_info.created_at&.strftime('%Y-%m-%d %H:%M:%S')
     end
   end
 

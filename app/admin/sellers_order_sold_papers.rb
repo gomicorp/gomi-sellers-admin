@@ -18,11 +18,7 @@ ActiveAdmin.register Sellers::OrderSoldPaper, as: 'Sales Info' do
       para order_sold_paper.order_info.order_status
     end
     column :ordered_date do |order_sold_paper|
-      ordered_date = order_sold_paper.order_info.ordered_at.tap do |time|
-        return '-' if time.nil?
-        time.strftime('%Y-%m-%d %H:%M:%S')
-      end
-      para ordered_date
+      para order_sold_paper.order_info.ordered_at&.strftime('%Y-%m-%d %H:%M:%S')
     end
   end
 
