@@ -5,6 +5,28 @@ ActiveAdmin.register Sellers::SettlementStatement, as: 'Settlement' do
   filter :requested_at, label: 'Requested date [yyyy-mm-dd]', as: :date_range
   filter :accepted_at, label: 'Accepted date [yyyy-mm-dd]', as: :date_range
 
+  member_action :accept, method: :put do
+    settlement_statement = Sellers::SettlementStatement.find params[:id]
+    if settlement_statement.status != 'requested'
+      redirect_to settlement_path(settlement_statement)
+      return false
+    end
+
+    settlement_statement.confirm!
+    redirect_to settlement_path(settlement_statement)
+  end
+
+  member_action :reject, method: :put do
+    settlement_statement = Sellers::SettlementStatement.find params[:id]
+    if settlement_statement.status != 'requested'
+      redirect_to settlement_path(settlement_statement)
+      return false
+    end
+
+    settlement_statement.reject!
+    redirect_to settlement_path(settlement_statement)
+  end
+
   index download_links: [:csv] do
     column :email do |settlement_statement|
       para settlement_statement.seller_info.seller.email
@@ -30,8 +52,11 @@ ActiveAdmin.register Sellers::SettlementStatement, as: 'Settlement' do
     end
   end
 
-  show do
-    h1 '출금 정보'
+  show title: '출금 정보' do
+    div do
+      span link_to '승인', accept_settlement_path(settlement), method: :put unless settlement.stamped?
+      span link_to '거절', reject_settlement_path(settlement), method: :put unless settlement.stamped?
+    end
     div class: 'column_table' do
       columns style: "max-width: 1400px;" do
         column span: 1 do
@@ -39,9 +64,7 @@ ActiveAdmin.register Sellers::SettlementStatement, as: 'Settlement' do
         end
         column span: 2 do
           status_tag(settlement.status)
-          span class: 'd-block' do
-            settlement.status_changed_at
-          end
+          para settlement.status_changed_at&.strftime('%Y-%m-%d %H:%M:%S')
         end
         column span: 1 do
           span class: 'th' do '신청 계좌' end

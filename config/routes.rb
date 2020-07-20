@@ -3,4 +3,5 @@ Rails.application.routes.draw do
   ActiveAdmin.routes(self)
 
   resources :seller_infos
+  resources :settlement_statements
 end

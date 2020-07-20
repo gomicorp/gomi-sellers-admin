@@ -25,9 +25,8 @@ ActiveAdmin.register Sellers::OrderSoldPaper, as: 'Sales Info' do
     end
   end
 
-  show do
-    h1 '판매내역 상세'
-    h2 '판매 정보'
+  show title: '판매내역 상세' do
+    h3 '판매 정보'
     div class: 'column_table' do
       columns style: "max-width: 1400px;" do
         column span: 1 do
@@ -71,7 +70,7 @@ ActiveAdmin.register Sellers::OrderSoldPaper, as: 'Sales Info' do
       end
     end
 
-    h2 '상품 내역'
+    h3 '상품 내역'
     table_for sales_info.order_info.cart.items do
       column(:'상품명') { |item| item.product_option.product.translate.title + ' : ' + item.product_option.name }
       column(:'단위상품가격') { |item| currency_format item.captured_retail_price }

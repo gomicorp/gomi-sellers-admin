@@ -46,9 +46,8 @@ ActiveAdmin.register Sellers::SellerInfo, as: 'Seller Info' do
     end
   end
 
-  show do
-    h1 'Seller Info'
-    h2 'Basic Info'
+  show title: '셀러 정보' do
+    h3 '기본 정보'
     div class: 'column_table' do
       columns style: "max-width: 1400px;" do
         column span: 1 do
@@ -85,7 +84,7 @@ ActiveAdmin.register Sellers::SellerInfo, as: 'Seller Info' do
       end
     end
 
-    h2 'Sales summery'
+    h3 '판매 요약'
     div class: 'column_table' do
       columns style: "max-width: 1400px;" do
         column span: 1 do
@@ -109,7 +108,7 @@ ActiveAdmin.register Sellers::SellerInfo, as: 'Seller Info' do
       end
     end
 
-    h2 'Sales detail'
+    h3 '판매 내역'
     table_for seller_info.order_sold_papers do
       column(:'주문번호') { |order_sold_paper| order_sold_paper.order_info.enc_id }
       column(:'상품명') do |order_sold_paper|
