@@ -46,6 +46,7 @@ gem 'rolify' # role 관리
 gem 'simple_trans', git: 'https://github.com/yhk1038/simple_trans.git'
 # Use Active Model has_secure_password
 gem 'bcrypt', '~> 3.1.7'
+gem 'omniauth-facebook' # 페이스북 로그인
 # admin builder
 gem 'bootstrap-sass'
 gem 'activeadmin'

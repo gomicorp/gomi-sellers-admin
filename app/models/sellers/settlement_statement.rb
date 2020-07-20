@@ -46,12 +46,23 @@ module Sellers
     def write_initial_state
       return false unless status.nil?
 
+      capture_account
       update(status: 'requested')
       withdraw_request
     end
 
     def withdraw_request
       seller_info.update(withdrawable_profit: seller_info.withdrawable_profit - settlement_amount)
+    end
+
+    def capture_account
+      account = seller_info.account_info
+      update(
+        captured_country: account.country,
+        captured_bank: account.bank,
+        captured_owner_name: account.owner_name,
+        captured_account_number: account.account_number
+      )
     end
 
   end

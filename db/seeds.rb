@@ -17,7 +17,6 @@ def seller_seed_breeder(n)
                               name: 'gomi_seller_' << SecureRandom.base36(2),
                               email: "gomi_seller_#{ SecureRandom.base36(2) }@gomi.com",
                               password: 'elimsimog2020',
-                              uid: SecureRandom.uuid,
                               birth_day: (DateTime.now - 20.years),
                               gender: ['F', 'N', nil].sample,
                               phone_number: "010-#{ Random.rand(1.0).to_s.slice(2..9).insert(4, '-') }"
@@ -25,12 +24,11 @@ def seller_seed_breeder(n)
 end
 
 seller_set = seller_seed_breeder 20
-ApplicationRecord.transaction do
   seller_set.each do |seller_attr|
     seller = Seller.create(seller_attr)
     ap 'created'
+    Authentication.create(user_id: seller.id, provider: 'facebook', uid: SecureRandom.uuid)
     ap seller
-  end
 end
 #=== sellers seller info ===#
 #=== sellers store info ===#
@@ -49,7 +47,7 @@ Seller.all.each do |seller|
     store = Sellers::StoreInfo.create(
       seller_info: seller_info,
       name: 'pop S2 up sotre for' << seller.name,
-      url: 'https://gomistore.in.th/' << seller.uid.hex.to_s,
+      url: 'https://gomistore.in.th/' << seller.authentications.first.uid.hex.to_s,
       comment: 'Here is test store'
     )
     ap 'created'
@@ -57,6 +55,7 @@ Seller.all.each do |seller|
 
     account = Sellers::AccountInfo.create(
       seller_info: seller_info,
+      country: 'global',
       bank: %w[kakao kb shinhan woori].sample,
       account_number: Random.rand(1.0).to_s.slice(2..14),
       owner_name: '홍길동'
