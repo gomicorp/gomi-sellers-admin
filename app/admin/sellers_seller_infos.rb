@@ -19,29 +19,31 @@ ActiveAdmin.register Sellers::SellerInfo, as: 'Seller Info' do
 
   index download_links: [:csv] do
 
-    column :'index' do |seller_info|
+    column :'순번' do |seller_info|
       para seller_info.seller.id
     end
-    column :email do |seller_info|
+    column :'이메일' do |seller_info|
       para seller_info.seller.email
     end
-    column :'seller name' do |seller_info|
+    column :'셀러명' do |seller_info|
       link_to seller_info.name, seller_info_path(seller_info)
     end
-    column :'phone number' do |seller_info|
+    column :'전화번호' do |seller_info|
       para seller_info.seller.phone_number
     end
-    column :country
-    column :'Cumulative count of sales' do |seller_info|
+    column :'국가'
+    column :'누적 판매 건수' do |seller_info|
       para seller_info.order_sold_papers.count
     end
-    column :'Cumulative sales amount' do |seller_info|
+    column :'누적 판매 금액' do |seller_info|
       para currency_format seller_info.cumulative_amount
     end
-    column :status do |seller_info|
+    column :'허가 상태' do |seller_info|
+      status = seller_info.permit_status.status
+      option = {class: status =='text-primary'}
       para seller_info.permit_status.status
     end
-    column :'joined date' do |seller_info|
+    column :'가입일' do |seller_info|
       para seller_info.created_at&.strftime('%Y-%m-%d %H:%M:%S')
     end
   end
@@ -50,32 +52,32 @@ ActiveAdmin.register Sellers::SellerInfo, as: 'Seller Info' do
     h3 '기본 정보'
     div class: 'column_table' do
       columns style: "max-width: 1400px;" do
-        column span: 1 do
-          span class: 'th' do 'Status' end
+        column class: 'column th', span: 1 do
+          span class: 'th' do '허가 상태' end
         end
         column span: 8 do
           action = if seller_info.permitted?
-                     link_to 'stop seller', stop_seller_info_path(seller_info), method: :put, class: 'btn'
+                     link_to 'stop seller', stop_seller_info_path(seller_info), method: :put, class: 'action-btn'
                    else
-                     link_to 'permit seller', permit_seller_info_path(seller_info), method: :put, class: 'btn point'
+                     link_to 'permit seller', permit_seller_info_path(seller_info), method: :put, class: 'action-btn primary'
                    end
           status_tag(seller_info.permit_status.status.to_sym) + span(action)
         end
       end
       columns style: "max-width: 1400px;" do
-        column span: 1 do
+        column class: 'column th', span: 1 do
           span '이메일'
         end
         column span: 2 do
           span seller_info.seller.email
         end
-        column span: 1 do
+        column class: 'column th', span: 1 do
           span '셀러명'
         end
         column span: 2 do
           span seller_info.name
         end
-        column span: 1 do
+        column class: 'column th', span: 1 do
           span '전화번호'
         end
         column span: 2 do
@@ -87,20 +89,20 @@ ActiveAdmin.register Sellers::SellerInfo, as: 'Seller Info' do
     h3 '판매 요약'
     div class: 'column_table' do
       columns style: "max-width: 1400px;" do
-        column span: 1 do
-          span class: 'th' do '총 판매 건수' end
+        column class: 'column th', span: 1 do
+          span '총 판매 건수'
         end
         column span: 2 do
           span seller_info.order_sold_papers.count
         end
-        column span: 1 do
-          span class: 'th' do '총 판매 금액' end
+        column class: 'column th', span: 1 do
+          span '총 판매 금액'
         end
         column span: 2 do
           span seller_info.cumulative_amount
         end
-        column span: 1 do
-          span class: 'th' do '미지급 수수료' end
+        column class: 'column th', span: 1 do
+          span '미지급 수수료'
         end
         column span: 2 do
           span seller_info.seller.phone_number
@@ -121,7 +123,7 @@ ActiveAdmin.register Sellers::SellerInfo, as: 'Seller Info' do
       column(:'셀러 수수료율(%)') { |order_sold_paper| (order_sold_paper.order_info.cart.price_sum/order_sold_paper.adjusted_profit).to_i.to_s << '%' }
       column(:'셀러 수수료') { |order_sold_paper| order_sold_paper.adjusted_profit }
       column(:'주문 상태') { |order_sold_paper| order_sold_paper.order_info.order_status }
-      column(:'일시') { |order_sold_paper| order_sold_paper.order_info.ordered_at }
+      column(:'일시') { |order_sold_paper| order_sold_paper.order_info.ordered_at&.strftime('%Y-%m-%d %H:%M:%S') }
     end
 
   end

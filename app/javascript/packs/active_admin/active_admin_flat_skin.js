@@ -11,7 +11,7 @@ jQuery(document).ready(function($) {
   if ($("#filters_sidebar_section").length > 0) {
     $("#main_content").prepend(
       $('<div class="bloc">').append(
-        $('<a>').text('Afficher les filtres').attr({
+        $('<a>').text('Search & Filter').attr({
           href: '#value', id:'diplay-filter'
         })
       )

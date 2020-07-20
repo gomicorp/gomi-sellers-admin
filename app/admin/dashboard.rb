@@ -16,12 +16,12 @@ ActiveAdmin.register_page "Dashboard" do
     columns do
       column do
         panel "Info" do
-          para "Welcome to ActiveAdmin."
+          para "Welcome to Sellers Admin."
         end
       end
 
       column do
-        panel "Recent Settlement Statement" do
+        panel "최근 정산 신청 내역" do
           ul do
             Sellers::SettlementStatement.order(requested_at: :desc).first(5).map do |statement|
               li do
@@ -38,7 +38,7 @@ ActiveAdmin.register_page "Dashboard" do
 
     columns do
       column do
-        panel "Newly applied sellers" do
+        panel "새로운 셀러 지원자" do
           ul do
             Sellers::SellerInfo.applied.order(created_at: :desc).first(5).map do |seller|
               li do
@@ -51,7 +51,7 @@ ActiveAdmin.register_page "Dashboard" do
         end
       end
       column do
-        panel "Recent sold order" do
+        panel "최근 판매 내역" do
           ul do
             Sellers::OrderSoldPaper.order(created_at: :desc).first(5).map do |order_paper|
               li do

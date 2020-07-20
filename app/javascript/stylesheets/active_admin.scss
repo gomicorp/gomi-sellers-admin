@@ -33,18 +33,6 @@
   }
 }
 
-table {
-  thead th {
-    text-align: center;
-    color: $gomi-deep-gray;
-    background-color: $gomi-dark-orange;
-  }
-
-  tbody {
-    text-align: center;
-  }
-}
-
 div#main_content {
   div.column_table {
     > div {
@@ -58,13 +46,30 @@ div#main_content {
       background-color: $gomi-light-orange;
     }
   }
-  a.btn {
+  a.action-btn {
     height: auto;
     padding: 0 2px 0 2px;
-    border: solid 1px $gomi-dark-gray;
+    border: solid 1px $gomi-orange;
     text-decoration: none;
-    .point {
-
+    &.primary {
+      background-color: $gomi-orange;
+      color: $gomi-white;
     }
   }
+
+  table {
+      border: solid 1px $gomi-deep-orange;
+    thead th {
+      text-align: center;
+      color: $gomi-deep-gray;
+      background-color: $gomi-dark-orange;
+      text-shadow: none;
+      border: solid 1px $gomi-deep-orange;
+    }
+
+    tbody {
+      text-align: center;
+    }
+  }
+
 }
