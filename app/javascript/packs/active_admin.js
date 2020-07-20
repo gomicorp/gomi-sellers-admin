@@ -3,3 +3,6 @@
 import "../stylesheets/active_admin.scss";
 
 import "@activeadmin/activeadmin";
+
+import "./active_admin/active_admin_flat_skin";
+

@@ -47,7 +47,9 @@ gem 'simple_trans', git: 'https://github.com/yhk1038/simple_trans.git'
 # Use Active Model has_secure_password
 gem 'bcrypt', '~> 3.1.7'
 # admin builder
+gem 'bootstrap-sass'
 gem 'activeadmin'
+gem 'active_admin_flat_skin'
 gem 'paper_trail'
 
 group :development, :test do

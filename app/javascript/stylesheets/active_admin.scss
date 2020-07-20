@@ -11,7 +11,60 @@
 @import "~@activeadmin/activeadmin/src/scss/mixins";
 @import "~@activeadmin/activeadmin/src/scss/base";
 
-// Overriding any non-variable SASS must be done after the fact.
-// For example, to change the default status-tag color:
-//
-//   .status_tag { background: #6090DB; }
+@import "./active_admin_flat_skin/active_admin_flat_skin";
+@import "~@fortawesome/fontawesome-free/scss/fontawesome";
+
+#header {
+  #tabs.header-item.tabs {
+    background-color: $gomi-light-gray;
+    top: 0;
+
+    li.menu_item a {
+      color: $gomi-deep-gray;
+    }
+  }
+
+  #site_title {
+    border-color: $panelBorder;
+
+    a:any-link {
+      color: $gomi-white;
+    }
+  }
+}
+
+table {
+  thead th {
+    text-align: center;
+    color: $gomi-deep-gray;
+    background-color: $gomi-dark-orange;
+  }
+
+  tbody {
+    text-align: center;
+  }
+}
+
+div#main_content {
+  div.column_table {
+    > div {
+      margin: 0;
+    }
+    div.columns {
+      border-bottom: solid 1px $gomi-deep-orange;
+    }
+    div .column.th {
+      height: 20px;
+      background-color: $gomi-light-orange;
+    }
+  }
+  a.btn {
+    height: auto;
+    padding: 0 2px 0 2px;
+    border: solid 1px $gomi-dark-gray;
+    text-decoration: none;
+    .point {
+
+    }
+  }
+}
