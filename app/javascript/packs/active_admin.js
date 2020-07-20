@@ -6,3 +6,9 @@ import "@activeadmin/activeadmin";
 
 import "./active_admin/active_admin_flat_skin";
 
+$(document).ready(function() {
+  let datepicker = $('input.datepicker');
+  datepicker.each(function(index,item) {
+    item.setAttribute('autocomplete','off');
+  })
+})
