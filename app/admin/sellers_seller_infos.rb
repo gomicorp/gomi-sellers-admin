@@ -3,6 +3,20 @@ ActiveAdmin.register Sellers::SellerInfo, as: 'Seller Info' do
   filter :seller_name_cont, label: 'Seller Name'
   filter :permit_status
 
+  member_action :permit, method: :put do
+    seller_info = Sellers::SellerInfo.find(params[:id])
+    seller_info.play_permit!
+    seller_info.reload
+    redirect_to seller_info_path seller_info, notice: 'The seller is permitted!'
+  end
+
+  member_action :stop, method: :put do
+    seller_info = Sellers::SellerInfo.find(params[:id])
+    seller_info.play_stop!(reason: params[:stop_reason])
+    seller_info.reload
+    redirect_to seller_info_path seller_info, notice: 'The seller is stopped!'
+  end
+
   index download_links: [:csv] do
 
     column :'index' do |seller_info|
@@ -41,7 +55,12 @@ ActiveAdmin.register Sellers::SellerInfo, as: 'Seller Info' do
           span class: 'th' do 'Status' end
         end
         column span: 8 do
-          status_tag(seller_info.permit_status.status.to_sym)
+          action = if seller_info.permitted?
+                     link_to 'stop seller', stop_seller_info_path(seller_info), method: :put, class: 'btn'
+                   else
+                     link_to 'permit seller', permit_seller_info_path(seller_info), method: :put, class: 'btn point'
+                   end
+          status_tag(seller_info.permit_status.status.to_sym) + span(action)
         end
       end
       columns style: "max-width: 1400px;" do

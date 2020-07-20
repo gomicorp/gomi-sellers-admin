@@ -7,7 +7,7 @@ module Sellers
 
     has_many :permit_change_lists, class_name: 'Sellers::PermitChangeList', dependent: :destroy
     has_one :permission, -> { order('created_at DESC') }, class_name: 'Sellers::PermitChangeList'
-    has_one :permit_status, through: :permission
+    has_one :permit_status, through: :permission, class_name: 'Sellers::PermitStatus'
 
     has_many :settlement_statements, class_name: 'Sellers::SettlementStatement'
     has_many :order_sold_papers, class_name: 'Sellers::OrderSoldPaper'
@@ -22,11 +22,17 @@ module Sellers
     delegate :phone_number, to: :seller
     delegate :commission_rate, to: :grade
 
+    def permitted?
+      update_status_cache
+      permit_status == Sellers::PermitStatus.permitted
+    end
+
     def play_permit!(reason=nil)
       permit_change_lists << Sellers::PermitChangeList.new(
         permit_status: Sellers::PermitStatus.permitted,
         reason: reason
       )
+      update_status_cache
     end
 
     def play_stop!(reason)
@@ -34,12 +40,14 @@ module Sellers
         permit_status: Sellers::PermitStatus.stopped,
         reason: reason
       )
+      update_status_cache
     end
 
     def init_permit_status!
       permit_change_lists << Sellers::PermitChangeList.new(
         permit_status: Sellers::PermitStatus.applied
       )
+      update_status_cache
     end
 
     def update_counter_cache(order_sold_paper = nil)
@@ -55,6 +63,12 @@ module Sellers
           cumulative_profit: cumulative_profit + order_sold_paper.adjusted_profit
         )
       end
+    end
+
+    private
+
+    def update_status_cache
+      update(permit_status: permission.permit_status)
     end
   end
 end
