@@ -1,6 +1,6 @@
 module Sellers
   class SettlementStatement < ApplicationRecord
-    belongs_to :seller_info, class_name: 'Sellers::SellerInfo', dependent: :destroy
+    belongs_to :seller_info, class_name: 'Sellers::SellerInfo'
     after_create_commit :write_initial_state
 
     STATUSES = %w(requested accepted rejected)
