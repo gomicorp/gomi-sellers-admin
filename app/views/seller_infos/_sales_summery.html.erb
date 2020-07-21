@@ -1,0 +1,21 @@
+<table class="attr_table">
+  <tr>
+    <th>총 판매 건수</th>
+    <td><%= seller_info.order_sold_papers.count %></td>
+    <th>총 판매 금액</th>
+    <td>
+      <%
+        cumulative_amount = seller_info.cumulative_amount
+        iso_code = seller_info.order_infos.first&.country&.iso_code
+      %>
+      <p class='mb-0'><%= number_to_currency(krw_exchange(cumulative_amount, iso_code), locale: :ko) %></p>
+      <p class="mb-0 text-secondary"><%= currency_format cumulative_amount %></p>
+    </td>
+    <th>미지급 수수료</th>
+    <td>
+      <% present_profit = seller_info.present_profit %>
+      <p class='mb-0'><%= number_to_currency(krw_exchange(present_profit, iso_code), locale: :ko) %></p>
+      <p class="mb-0 text-secondary"><%= currency_format present_profit %></p>
+    </td>
+  </tr>
+</table>

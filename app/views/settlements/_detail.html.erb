@@ -1,0 +1,35 @@
+<%- unless settlement.stamped? %>
+  <%= link_to '승인', accept_settlement_path(settlement), method: :put, class: 'action-btn primary' %>
+  <%= link_to '거절', reject_settlement_path(settlement), method: :put, class: 'action-btn' %>
+<%- end %>
+  <table class="attr_table">
+    <tr>
+      <th>신청상태</th>
+      <td>
+        <span class="status_tag"><%= settlement.status %></span>
+      </td>
+      <th>신청계좌</th>
+      <td>
+        <p><%= "#{ settlement.captured_country } / #{ settlement.captured_bank }" %></p>
+        <p><%= settlement.captured_account_number %></p>
+      </td>
+      <th>요청금액</th>
+      <td>
+        <% amount = settlement.settlement_amount %>
+        <p class="mb-0"><%= number_to_currency(krw_exchange(amount, settlement.seller_info.order_infos.first&.country.iso_code), locale: :ko) %> </p>
+        <p class="mb-0 text-secondary"><%= currency_format amount %></p>
+      </td>
+    </tr>
+    <tr>
+      <th>이메일</th>
+      <td>
+        <%= settlement.seller_info.seller.email %>
+      </td>
+      <th>셀러명</th>
+      <td>
+        <%= settlement.seller_info.name %>
+      </td>
+      <th>전화번호</th>
+      <td><%= settlement.seller_info.seller.phone_number %></td>
+    </tr>
+  </table>

@@ -9,8 +9,8 @@ module Sellers
     has_one :permission, -> { order('created_at DESC') }, class_name: 'Sellers::PermitChangeList'
     has_one :permit_status, through: :permission, class_name: 'Sellers::PermitStatus'
 
-    has_many :settlement_statements, class_name: 'Sellers::SettlementStatement'
-    has_many :order_sold_papers, class_name: 'Sellers::OrderSoldPaper'
+    has_many :settlement_statements, class_name: 'Sellers::SettlementStatement', dependent: :destroy
+    has_many :order_sold_papers, class_name: 'Sellers::OrderSoldPaper', dependent: :destroy
 
     has_many :order_infos, through: :order_sold_papers
 

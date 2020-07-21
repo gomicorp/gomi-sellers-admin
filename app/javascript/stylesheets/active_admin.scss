@@ -19,6 +19,7 @@ body {
     #tabs.header-item.tabs {
       background-color: $gomi-light-gray;
       top: 0;
+
       li {
         color: $gomi-deep-gray;
         margin: 0;
@@ -34,8 +35,9 @@ body {
       }
     }
   }
+
   #active_admin_content {
-    padding-left: 0;
+    width: 83%;
   }
 
   div#main_content {
@@ -43,8 +45,31 @@ body {
       width: auto;
     }
 
+    table.attr_table {
+      vertical-align: middle;
+      margin-bottom: 30px;
+
+      tr {
+        background-color: $gomi-white;
+        border-bottom: solid 1px $gomi-deep-orange;
+        border-top: solid 1px $gomi-deep-orange;
+      }
+
+      th {
+        text-align: center;
+        background-color: $gomi-light-orange;
+      }
+
+      td {
+        vertical-align: inherit;
+        text-align: left;
+      }
+    }
+
+    //column_table 안씀
     div.column_table {
       margin-bottom: 30px;
+
       > div {
         margin: 0;
       }
@@ -53,22 +78,17 @@ body {
         background-color: $gomi-white;
         border-bottom: solid 1px $gomi-deep-orange;
         border-top: solid 1px $gomi-deep-orange;
-        height: 32px;
-        position: relative;
+        height: 100%;
       }
 
       div .column {
-        height: 30px;
+        position: relative;
+        height: 100%;
+
         &.th {
           text-align: center;
           background-color: $gomi-light-orange;
         }
-
-        span,a {
-          line-height: 30px;
-          vertical-align: middle;
-        }
-
       }
     }
 

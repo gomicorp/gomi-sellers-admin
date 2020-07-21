@@ -1,0 +1,29 @@
+<% order = sales_info.order_info %>
+<table class="attr_table">
+  <tr>
+    <th>주문번호</th>
+    <td><%= link_to sales_info.order_info.enc_id, order_info_path(sales_info.order_info) %></td>
+    <th>주문상태</th>
+    <td>
+      <span class="status_tag"><%= sales_info.order_info.order_status %></span>
+    </td>
+    <th>주문일시</th>
+    <td><%= sales_info.order_info.ordered_at&.strftime('%Y-%m-%d %H:%M:%S') %></td>
+  </tr>
+  <tr>
+    <th>총 주문 금액</th>
+    <td>
+      <% amount = order.cart.price_sum %>
+      <p class="mb-0"><%= number_to_currency(krw_exchange(amount, order.country.iso_code), locale: :ko) %> </p>
+      <p class="mb-0 text-secondary"><%= currency_format amount %></p>
+    </td>
+    <th>총 셀러 수수료</th>
+    <td>
+      <% amount = sales_info.adjusted_profit %>
+      <p class="mb-0"><%= number_to_currency(krw_exchange(amount, order.country.iso_code), locale: :ko) %> </p>
+      <p class="mb-0 text-secondary"><%= currency_format amount %></p>
+    </td>
+      <th>셀러명</th>
+    <td><%= sales_info.seller_info.name %></td>
+  </tr>
+</table>

@@ -55,65 +55,10 @@ ActiveAdmin.register Sellers::SellerInfo, as: 'Seller Info' do
 
   show title: '셀러 정보' do
     h3 '기본 정보'
-    div class: 'column_table' do
-      columns style: "max-width: 1400px;" do
-        column class: 'column th', span: 1 do
-          span class: 'th' do '허가 상태' end
-        end
-        column span: 8 do
-          action = if seller_info.permitted?
-                     link_to 'stop seller', stop_seller_info_path(seller_info), method: :put, class: 'action-btn'
-                   else
-                     link_to 'permit seller', permit_seller_info_path(seller_info), method: :put, class: 'action-btn primary'
-                   end
-          status_tag(seller_info.permit_status.status.to_sym) + span(action)
-        end
-      end
-      columns style: "max-width: 1400px;" do
-        column class: 'column th', span: 1 do
-          span '이메일'
-        end
-        column span: 2 do
-          span seller_info.seller.email
-        end
-        column class: 'column th', span: 1 do
-          span '셀러명'
-        end
-        column span: 2 do
-          span seller_info.name
-        end
-        column class: 'column th', span: 1 do
-          span '전화번호'
-        end
-        column span: 2 do
-          span seller_info.seller.phone_number
-        end
-      end
-    end
+    render 'detail', { seller_info: seller_info }
 
     h3 '판매 요약'
-    div class: 'column_table' do
-      columns style: "max-width: 1400px;" do
-        column class: 'column th', span: 1 do
-          span '총 판매 건수'
-        end
-        column span: 2 do
-          span seller_info.order_sold_papers.count
-        end
-        column class: 'column th', span: 1 do
-          span '총 판매 금액'
-        end
-        column span: 2 do
-          span currency_format seller_info.cumulative_amount
-        end
-        column class: 'column th', span: 1 do
-          span '미지급 수수료'
-        end
-        column span: 2 do
-          span currency_format seller_info.present_profit
-        end
-      end
-    end
+    render 'sales_summery', { seller_info: seller_info }
 
     h3 '판매 내역'
     table_for seller_info.order_sold_papers do

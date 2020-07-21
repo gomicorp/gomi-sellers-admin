@@ -1,7 +1,7 @@
 module Sellers
   class Grade < ApplicationRecord
     validates_inclusion_of :name, in: %w[beginner bronze silver gold]
-    validates_uniqueness_of :name
+    validates_uniqueness_of :name, case_sensitive: false
 
     BEGINNER = find_or_create_by(name: 'beginner', commission_rate: 0.05)
     BRONZE = find_or_create_by(name: 'bronze', commission_rate: 0.1)

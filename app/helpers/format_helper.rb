@@ -29,4 +29,9 @@ module FormatHelper
   def safe_l(datetime)
     datetime.respond_to?(:strftime) ? l(datetime) : '-'
   end
+
+  def krw_exchange(amount, iso=nil)
+    @currency_list ||= iso.nil? ? Sellers::StandardCurrencyService.exchange_rate : Sellers::StandardCurrencyService.exchange_rate(iso)
+    (@currency_list.dig('rates', 'KRW') * amount).to_i
+  end
 end

@@ -1,0 +1,29 @@
+<table class="attr_table">
+  <tr>
+    <th>허가상태</th>
+    <td>
+      <% action = if seller_info.permitted?
+                    link_to 'stop seller', stop_seller_info_path(seller_info), method: :put, class: 'action-btn'
+                  else
+                    link_to 'permit seller', permit_seller_info_path(seller_info), method: :put, class: 'action-btn primary'
+                  end
+      %>
+      <span class="status_tag mr-2"><%= seller_info.permit_status.status.to_sym %></span>
+      <%= action %>
+    </td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <th>이메일</th>
+    <td>
+      <%= seller_info.seller.email %>
+    </td>
+    <th>셀러명</th>
+    <td><%= seller_info.name %></td>
+    <th>전화번호</th>
+    <td><%= seller_info.phone_number %></td>
+  </tr>
+</table>

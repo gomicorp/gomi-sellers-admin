@@ -9,10 +9,15 @@ ActiveAdmin.register Sellers::OrderSoldPaper, as: 'Sales Info' do
       link_to order_sold_paper.order_info.enc_id, sales_info_path(order_sold_paper)
     end
     column :'판매 금액' do |order_sold_paper|
-      para currency_format order_sold_paper.order_info.payment.total_price_sum
+      order = order_sold_paper.order_info
+      amount = order.payment.total_price_sum
+      para class: 'mb-1' do number_to_currency(krw_exchange(amount, order.country.iso_code), locale: :ko) end
+      para class: 'mb-1 text-secondary' do currency_format amount end
     end
     column :'셀러 수익' do |order_sold_paper|
-      para currency_format order_sold_paper.adjusted_profit
+      amount = order_sold_paper.adjusted_profit
+      para class: 'mb-1' do number_to_currency(krw_exchange(amount, order_sold_paper.order_info.country.iso_code), locale: :ko) end
+      para class: 'mb-1 text-secondary' do currency_format amount end
     end
     column :'셀러명' do |order_sold_paper|
       para order_sold_paper.seller_info.name
@@ -26,46 +31,55 @@ ActiveAdmin.register Sellers::OrderSoldPaper, as: 'Sales Info' do
   end
 
   show title: '판매내역 상세' do
+
     h3 '판매 정보'
+    render 'detail', { sales_info: sales_info }
     div class: 'column_table' do
       columns style: "max-width: 1400px;" do
         column class: 'column th', span: 1 do
-          span do '주문번호' end
+          '주문번호'
         end
         column span: 2 do
           link_to sales_info.order_info.enc_id, order_info_path(sales_info.order_info)
         end
         column class: 'column th', span: 1 do
-          span do '주문상태' end
+          '주문상태'
         end
         column span: 2 do
           status_tag(sales_info.order_info.order_status)
         end
         column class: 'column th', span: 1 do
-          span do '주문일시' end
+          '주문일시'
         end
         column span: 2 do
-          span sales_info.order_info.ordered_at&.strftime('%Y-%m-%d %H:%M:%S')
+          sales_info.order_info.ordered_at&.strftime('%Y-%m-%d %H:%M:%S')
         end
       end
+
       columns style: "max-width: 1400px;" do
         column class: 'column th', span: 1 do
           span '총 주문 금액'
         end
         column span: 2 do
-          span currency_format sales_info.order_info.cart.price_sum
+          order = sales_info.order_info
+          amount = order.cart.price_sum
+          para class: 'mb-0' do number_to_currency(krw_exchange(amount, order.country.iso_code), locale: :ko) end
+          para class: 'mb-0 text-secondary' do currency_format amount end
         end
         column class: 'column th', span: 1 do
-          span '총 셀러 수수료'
+          '총 셀러 수수료'
         end
         column span: 2 do
-          span currency_format sales_info.adjusted_profit
+          order = sales_info.order_info
+          amount = sales_info.adjusted_profit
+          para class: 'mb-0' do number_to_currency(krw_exchange(amount, order.country.iso_code), locale: :ko) end
+          para class: 'mb-0 text-secondary' do currency_format amount end
         end
         column class: 'column th', span: 1 do
-          span '셀러명'
+          '셀러명'
         end
         column span: 2 do
-          span sales_info.seller_info.name
+          sales_info.seller_info.name
         end
       end
     end
