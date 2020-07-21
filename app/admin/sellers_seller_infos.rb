@@ -40,8 +40,13 @@ ActiveAdmin.register Sellers::SellerInfo, as: 'Seller Info' do
     end
     column :'허가 상태' do |seller_info|
       status = seller_info.permit_status.status
-      option = {class: status =='text-primary'}
-      para seller_info.permit_status.status
+      class_option = if status == 'permitted'
+                       {class: 'text-primary font-weight-bold' }
+                     elsif status == 'stopped'
+                       {class: 'text-danger font-weight-bold' }
+                     end
+
+      para(class_option) do seller_info.permit_status.status end
     end
     column :'가입일' do |seller_info|
       para seller_info.created_at&.strftime('%Y-%m-%d %H:%M:%S')
@@ -99,13 +104,13 @@ ActiveAdmin.register Sellers::SellerInfo, as: 'Seller Info' do
           span '총 판매 금액'
         end
         column span: 2 do
-          span seller_info.cumulative_amount
+          span currency_format seller_info.cumulative_amount
         end
         column class: 'column th', span: 1 do
           span '미지급 수수료'
         end
         column span: 2 do
-          span seller_info.seller.phone_number
+          span currency_format seller_info.present_profit
         end
       end
     end

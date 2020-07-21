@@ -31,31 +31,21 @@
   .header-item.tabs#tabs{
     li{
       display: block;
-      margin-bottom: 20px !important;
-
       a{
-        height: 35px;
-        line-height: 35px;
-        color: $textGray;
+        text-align: center;
+        color: $gomi-dark-gray;
         font-size: 14px;
-        transition: all .3s;
       }
 
       &.current{
         a{
           color: #fff !important;
         }
-
-        &:hover{
-          a{
-            margin: -10px 0;
-          }            
-        }
       }
 
       &:hover{
         a{
-          margin: 0;
+          color: $gomi-light-gray;
           background-color: $skinBlackLight;
         }
       }
@@ -72,52 +62,23 @@
               height: inherit;
             }
           }
-
-          &.slided_down{
-            display: block;
-            position: relative;
-            float: none;
-            border-radius: 0;
-            // padding: 0;
-            padding: 3px 0px 5px 0;
-            background-color: $skinBlackLight;
-            box-shadow: 0 0 2px rgba(0, 0, 0, 0.8) inset;
-
-            li{
-              &:hover{
-                a{
-                  color: $skinActiveColor !important;
-                }
-              }
-            }
-          }
         }
 
         &:hover{
           ul{
-            display: none;
-            padding: 3px 0px 5px 0;
             background-color: $skinBlackLight;
           }
         }
       }
 
       &.current.has_nested{
-        .slided_down{
-          margin-top: 5px;
-          a{
-            background-color: transparent !important;
-          }
-          .current{
-            a{
-              color: $skinActiveColor !important;
-            }
-          }       
+        a{
+          background-color: transparent !important;
         }
-        &:hover{
-          .slided_down{
-            a{margin: 0 !important;}
-          }            
+        .current{
+          a{
+            color: $skinActiveColor !important;
+          }
         }
       }
     }
