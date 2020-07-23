@@ -7,6 +7,7 @@ module Sellers
     APPLIED = find_or_create_by(status: 'applied')
     PERMITTED = find_or_create_by(status: 'permitted')
     STOPPED = find_or_create_by(status: 'stopped')
+    Rails.env
 
     def self.applied
       APPLIED

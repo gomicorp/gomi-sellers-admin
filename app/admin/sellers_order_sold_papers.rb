@@ -34,55 +34,6 @@ ActiveAdmin.register Sellers::OrderSoldPaper, as: 'Sales Info' do
 
     h3 '판매 정보'
     render 'detail', { sales_info: sales_info }
-    div class: 'column_table' do
-      columns style: "max-width: 1400px;" do
-        column class: 'column th', span: 1 do
-          '주문번호'
-        end
-        column span: 2 do
-          link_to sales_info.order_info.enc_id, order_info_path(sales_info.order_info)
-        end
-        column class: 'column th', span: 1 do
-          '주문상태'
-        end
-        column span: 2 do
-          status_tag(sales_info.order_info.order_status)
-        end
-        column class: 'column th', span: 1 do
-          '주문일시'
-        end
-        column span: 2 do
-          sales_info.order_info.ordered_at&.strftime('%Y-%m-%d %H:%M:%S')
-        end
-      end
-
-      columns style: "max-width: 1400px;" do
-        column class: 'column th', span: 1 do
-          span '총 주문 금액'
-        end
-        column span: 2 do
-          order = sales_info.order_info
-          amount = order.cart.price_sum
-          para class: 'mb-0' do number_to_currency(krw_exchange(amount, order.country.iso_code), locale: :ko) end
-          para class: 'mb-0 text-secondary' do currency_format amount end
-        end
-        column class: 'column th', span: 1 do
-          '총 셀러 수수료'
-        end
-        column span: 2 do
-          order = sales_info.order_info
-          amount = sales_info.adjusted_profit
-          para class: 'mb-0' do number_to_currency(krw_exchange(amount, order.country.iso_code), locale: :ko) end
-          para class: 'mb-0 text-secondary' do currency_format amount end
-        end
-        column class: 'column th', span: 1 do
-          '셀러명'
-        end
-        column span: 2 do
-          sales_info.seller_info.name
-        end
-      end
-    end
 
     h3 '상품 내역'
     table_for sales_info.order_info.cart.items do
