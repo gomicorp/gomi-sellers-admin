@@ -24,8 +24,12 @@ class CartItem < ApplicationRecord
 
   has_one :order_info, through: :cart
 
+  has_one :item_sold_paper, class_name: 'Sellers::ItemSoldPaper', foreign_key: :item_id, dependent: :destroy
+
   scope :cancelled, -> { where(cancelled_tag: CartItemCancelledTag.all) }
   scope :not_cancelled, -> { where.not(cancelled_tag: CartItemCancelledTag.all) }
+
+  scope :sold_by_seller, -> { where(item_sold_paper: Sellers::ItemSoldPaper.all) }
 
   scope :eager_resources, -> { includes(:cancelled_tag, cart: { order_info: :payment }) }
   scope :cancelled_at, ->(range) { includes(:cancelled_tag).where(cancelled_tag: CartItemCancelledTag.where(cancelled_at: range)) }

@@ -133,3 +133,8 @@ body {
     }
   }
 }
+
+// sales info에서 기본 scope 숨기기
+body.index.sales_infos div.table_tools {
+  display: none;
+}

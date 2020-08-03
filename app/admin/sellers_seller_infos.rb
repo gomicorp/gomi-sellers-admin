@@ -33,7 +33,7 @@ ActiveAdmin.register Sellers::SellerInfo, as: 'Seller Info' do
     end
     column :'국가'
     column :'누적 판매 건수' do |seller_info|
-      para seller_info.order_sold_papers.count
+      para seller_info.order_infos.count
     end
     column :'누적 판매 금액' do |seller_info|
       para currency_format seller_info.cumulative_amount
@@ -41,12 +41,14 @@ ActiveAdmin.register Sellers::SellerInfo, as: 'Seller Info' do
     column :'허가 상태' do |seller_info|
       status = seller_info.permit_status.status
       class_option = if status == 'permitted'
-                       {class: 'text-primary font-weight-bold' }
+                       {class: 'text-primary font-weight-bold'}
                      elsif status == 'stopped'
-                       {class: 'text-danger font-weight-bold' }
+                       {class: 'text-danger font-weight-bold'}
                      end
 
-      para(class_option) do seller_info.permit_status.status end
+      para(class_option) do
+        seller_info.permit_status.status
+      end
     end
     column :'가입일' do |seller_info|
       para seller_info.created_at&.strftime('%Y-%m-%d %H:%M:%S')
@@ -55,25 +57,29 @@ ActiveAdmin.register Sellers::SellerInfo, as: 'Seller Info' do
 
   show title: '셀러 정보' do
     h3 '기본 정보'
-    render 'detail', { seller_info: seller_info }
+    render 'detail', {seller_info: seller_info}
 
     h3 '판매 요약'
-    render 'sales_summery', { seller_info: seller_info }
+    render 'sales_summery', {seller_info: seller_info}
 
     h3 '판매 내역'
-    table_for seller_info.order_sold_papers do
-      column(:'주문번호') { |order_sold_paper| order_sold_paper.order_info.enc_id }
-      column(:'상품명') do |order_sold_paper|
-        order = order_sold_paper.order_info
-        order.quantity.to_s + 'items includes ' + order.first_product&.translate&.title
+    table_for seller_info.order_infos do
+      column(:'주문번호') { |order_info| order_info.enc_id }
+      column(:'상품명') do |order_info|
+        order_info.quantity.to_s + 'items includes ' + order_info.first_product&.translate&.title
       end
-      column(:'상품 단위 금액') { |order_sold_paper| order_sold_paper.order_info.items.first.captured_retail_price }
-      column(:'판매 개수') { |order_sold_paper| order_sold_paper.order_info.items.sum(:option_count) }
-      column(:'총 판매 금액') { |order_sold_paper| order_sold_paper.order_info.cart.price_sum }
-      column(:'셀러 수수료율(%)') { |order_sold_paper| (order_sold_paper.order_info.cart.price_sum/order_sold_paper.adjusted_profit).to_i.to_s << '%' }
-      column(:'셀러 수수료') { |order_sold_paper| order_sold_paper.adjusted_profit }
-      column(:'주문 상태') { |order_sold_paper| order_sold_paper.order_info.order_status }
-      column(:'일시') { |order_sold_paper| order_sold_paper.order_info.ordered_at&.strftime('%Y-%m-%d %H:%M:%S') }
+      column(:'상품 단위 금액') { |order_info| order_info.items.first.captured_retail_price }
+      column(:'판매 개수') { |order_info| order_info.items.sum(:option_count) }
+      column(:'총 판매 금액') { |order_info| order_info.cart.price_sum }
+      column(:'셀러 수수료율(%)') do |order_info|
+        items = order_info.sellers_items
+        (items.sum(:captured_retail_price) / items.map(&:item_sold_paper).sum(:adjusted_profit)).to_i.to_s << '%'
+      end
+      column(:'셀러 수수료') do |order_info|
+        order_info.sellers_items.map(&:item_sold_paper).sum(:adjusted_profit)
+      end
+      column(:'주문 상태') do |order_info| order_info.order_status end
+      column(:'일시') do |order_info| order_info.ordered_at&.strftime('%Y-%m-%d %H:%M:%S') end
     end
 
   end
