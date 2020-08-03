@@ -10,9 +10,10 @@ module Sellers
     has_one :permit_status, through: :permission, class_name: 'Sellers::PermitStatus'
 
     has_many :settlement_statements, class_name: 'Sellers::SettlementStatement', dependent: :destroy
-    has_many :order_sold_papers, class_name: 'Sellers::OrderSoldPaper', dependent: :destroy
-
-    has_many :order_infos, through: :order_sold_papers
+    has_many :item_sold_papers, class_name: 'Sellers::ItemSoldPaper', dependent: :destroy
+    has_many :items, through: :item_sold_papers
+    has_many :order_infos, -> { distinct }, through: :items
+    scope :order_infos, -> { OrderInfo.where(items: items) }
 
     scope :permitted, -> { where(permission: Sellers::PermitChangeList.where(permit_status: Sellers::PermitStatus.permitted)) }
     scope :applied, -> { where(permission: Sellers::PermitChangeList.where(permit_status: Sellers::PermitStatus.applied)) }
@@ -27,7 +28,7 @@ module Sellers
       permit_status == Sellers::PermitStatus.permitted
     end
 
-    def play_permit!(reason=nil)
+    def play_permit!(reason = nil)
       permit_change_lists << Sellers::PermitChangeList.new(
         permit_status: Sellers::PermitStatus.permitted,
         reason: reason
@@ -50,17 +51,17 @@ module Sellers
       update_status_cache
     end
 
-    def update_counter_cache(order_sold_paper = nil)
-      if order_sold_paper.nil?
+    def update_counter_cache(item_sold_paper = nil)
+      if item_sold_paper.nil?
         update_columns(
-          cumulative_amount: order_infos.map(&:payment).sum(&:total_price_sum),
-          cumulative_profit: order_sold_papers.sum(&:adjusted_profit)
+          cumulative_amount: items.sum(&:captured_retail_price),
+          cumulative_profit: item_sold_papers.sum(&:adjusted_profit)
         )
       else
-        order_info = order_sold_paper.order_info
+        cart_item = item_sold_paper.cart_item
         update_columns(
-          cumulative_amount: cumulative_amount + order_info.payment.total_price_sum,
-          cumulative_profit: cumulative_profit + order_sold_paper.adjusted_profit
+          cumulative_amount: cumulative_amount + cart_item.captured_retail_price,
+          cumulative_profit: cumulative_profit + item_sold_paper.adjusted_profit
         )
       end
     end

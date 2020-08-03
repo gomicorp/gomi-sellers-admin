@@ -1,6 +1,6 @@
 module Sellers
-  class OrderSoldPaper < ApplicationRecord
-    belongs_to :order_info
+  class ItemSoldPaper < ApplicationRecord
+    belongs_to :item, class_name: 'CartItem'
     belongs_to :seller_info, class_name: 'Sellers::SellerInfo'
 
     def paid?

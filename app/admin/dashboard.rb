@@ -53,10 +53,10 @@ ActiveAdmin.register_page "Dashboard" do
       column do
         panel "최근 판매 내역" do
           ul do
-            Sellers::OrderSoldPaper.order(created_at: :desc).first(5).map do |order_paper|
+            OrderInfo.sellers_order.order(created_at: :desc).first(5).map do |order_info|
               li do
-                name = link_to(order_paper.order_info.enc_id, sales_info_path(order_paper))
-                others = [currency_format(order_paper.order_info.payment.total_price_sum), order_paper.seller_info.name, order_paper.created_at.strftime('%Y/%m/%d')]
+                name = link_to(order_info.enc_id, sales_info_path(order_info))
+                others = [currency_format(order_info.payment.total_price_sum), order_info.items.first.item_sold_paper.seller_info.name, order_info.created_at.strftime('%Y/%m/%d')]
                 ([name] + others).join(dashboard_separator).html_safe
               end
             end

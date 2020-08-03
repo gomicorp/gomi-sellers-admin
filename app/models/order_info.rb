@@ -14,7 +14,8 @@ class OrderInfo < NationRecord
   has_many :brands, through: :order_info_brands
   # ===============================================
 
-  has_one :order_sold_paper, class_name: 'Sellers::OrderSoldPaper'
+  scope :sellers_order, -> { includes(:items).where(cart: Cart.where(items: CartItem.sold_by_seller)) }
+  has_many :sellers_papers, through: :items, source: :item_sold_paper
 
   validates_presence_of :cart_id, :enc_id
   validates_uniqueness_of :cart_id, :enc_id
@@ -52,5 +53,9 @@ class OrderInfo < NationRecord
 
   def quantity
     cart.items.map(&:option_count).sum
+  end
+
+  def sellers_items
+    items.filter(&:item_sold_paper)
   end
 end
