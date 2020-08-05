@@ -13,7 +13,6 @@ module Sellers
     has_many :item_sold_papers, class_name: 'Sellers::ItemSoldPaper', dependent: :destroy
     has_many :items, through: :item_sold_papers
     has_many :order_infos, -> { distinct }, through: :items
-    scope :order_infos, -> { OrderInfo.where(items: items) }
 
     scope :permitted, -> { where(permission: Sellers::PermitChangeList.where(permit_status: Sellers::PermitStatus.permitted)) }
     scope :applied, -> { where(permission: Sellers::PermitChangeList.where(permit_status: Sellers::PermitStatus.applied)) }
