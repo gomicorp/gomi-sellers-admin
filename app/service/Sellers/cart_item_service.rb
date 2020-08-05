@@ -16,10 +16,20 @@ module Sellers
       return addable_status unless addable_status
 
       ActiveRecord::Base.transaction do
-        cart_item = items.select { |i| i.product_option.id == product_option_id.to_i }.first
-        cart_item ||= items.create(cart: cart, product_option: option, product: option.product)
+        cart_item = items.select do |i|
+          seller = i&.item_sold_paper&.seller_info
+          i.product_option.id == product_option_id.to_i && seller == @seller_info
+        end.first
+        unless cart_item
+          cart_item ||= items.create(
+            cart: cart,
+            product_option: option,
+            product: option.product
+          )
+        end
 
         quantity.times { put_in_barcode!(cart_item, option) }
+        cart_item.write_sold_paper(@seller_info) unless @seller_info.nil?
       end
 
       true
@@ -36,6 +46,7 @@ module Sellers
 
       cart_item.save
       quantity.times { put_in_barcode!(cart_item, option) }
+      cart_item.item_sold_paper&.reset_profit
       true
     end
 

@@ -47,8 +47,10 @@ Seller.all.each do |seller|
     store = Sellers::StoreInfo.create(
       seller_info: seller_info,
       name: 'pop S2 up sotre for' << seller.name,
-      url: 'https://gomistore.in.th/' << seller.authentications.first.uid.hex.to_s,
       comment: 'Here is test store'
+    )
+    store.update(
+      url: 'https://gomistore.in.th/popup_store/' << store.id.to_s,
     )
     ap 'created'
     ap store
@@ -95,7 +97,7 @@ ApplicationRecord.transaction do
 end
 
 #=== order by seller store ===#
-#=== order sold paper ===#
+#=== item sold paper ===#
 #ship_info_samples => 기존에 존재하는 가장 최근의 5개 ship info에서 reference와 timestamp를 제거, 샘플값으로 활용
 ship_info_samples = OrderInfo.last(5).map(&:ship_info).map do |ship_info|
   ship_info.attributes.tap do |sample|
@@ -119,7 +121,7 @@ ApplicationRecord.transaction do
     cart = orderer.current_cart
     #카트에 product option를 넣습니다.
     cart_item_service = Sellers::CartItemService.new(cart)
-    cart_item_service.plus(product.default_option.id, 1)
+    cart_item_service.add(product.default_option.id, 1)
     order_param = {
       cart_id: cart.id,
       channel: Channel.default_channel

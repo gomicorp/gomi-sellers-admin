@@ -42,18 +42,13 @@ module Sellers
           # 5. capture price fields into cart items
           cart.items.each(&:capture_price_fields!)
 
-          # 6. associate seller info
-          item_sold_papers = cart.items.map do |item|
-            Sellers::ItemSoldPaper.create(
-              item: item,
-              seller_info: seller.seller_info,
-              adjusted_profit: (item.result_price * item.option_count * seller_info.commission_rate)
-            )
-          end
+          # 6. update seller's info
+          item_sold_papers = cart.items.map(&:item_sold_paper).compact
+          item_sold_papers.each(&:order!)
 
           # 7. update seller info cache
           item_sold_papers.each do |paper|
-            seller.seller_info.update_counter_cache paper
+            paper.seller_info.update_counter_cache paper
           end
           raise ActiveRecord::Rollback if errors
         end
