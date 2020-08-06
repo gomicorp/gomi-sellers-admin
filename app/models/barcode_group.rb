@@ -28,7 +28,7 @@ class BarcodeGroup
   end
 
   def additional_price
-    @additional_price ||= product_options.sum(:additional_price)
+    @additional_price ||= product_options.sum(&:additional_price)
   end
 
   def price_mark

@@ -62,14 +62,14 @@ class ProductItem < NationRecord
   # ===== START Gomisa ======
   #
   def accumulated_amounts
-    @accumulated_amounts ||= adjustments.where.not(reason: 'Order').sum(:amount)
+    @accumulated_amounts ||= adjustments.where.not(reason: 'Order').sum(&:amount)
   end
   #
   def exports_quantity(from = nil, to = nil, channel = nil)
     query = {}
     query[:created_at] = from.to_date..to.to_date if from && to
     query[:channel] = channel if channel && channel.to_s != 'All'
-    Math.abs(adjustments.where(reason: 'Order').where(query).sum(:amount))
+    Math.abs(adjustments.where(reason: 'Order').where(query).sum(&:amount))
   end
   #
   # ===== END Gomisa =====

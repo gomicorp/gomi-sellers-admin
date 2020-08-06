@@ -29,7 +29,7 @@ class Barcode < ApplicationRecord
   after_save :update_product_cache
 
   def price
-    product.price + product_options.sum(:additional_price)
+    product.price + product_options.sum(&:additional_price)
   end
 
   def cancel!

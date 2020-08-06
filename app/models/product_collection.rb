@@ -49,7 +49,7 @@ class ProductCollection < NationRecord
   end
 
   def barcodes_count
-    @barcodes_count ||= items.sum(:barcodes_count)
+    @barcodes_count ||= items.sum(&:barcodes_count)
   end
 
   def active
@@ -57,7 +57,7 @@ class ProductCollection < NationRecord
   end
 
   def alive_barcodes_count
-    items.sum(:alive_barcodes_count)
+    items.sum(&:alive_barcodes_count)
   end
 
 

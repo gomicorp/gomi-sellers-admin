@@ -68,15 +68,15 @@ ActiveAdmin.register Sellers::SellerInfo, as: 'Seller Info' do
       column(:'상품명') do |order_info|
         order_info.quantity.to_s + 'items includes ' + order_info.first_product&.translate&.title
       end
-      column(:'상품 단위 금액') { |order_info| order_info.items.first.captured_retail_price }
-      column(:'판매 개수') { |order_info| order_info.items.sum(:option_count) }
-      column(:'총 판매 금액') { |order_info| order_info.cart.price_sum }
+      column(:'상품 단위 금액') { |order_info| currency_format order_info.items.first.captured_retail_price }
+      column(:'판매 개수') { |order_info| order_info.items.sum(&:option_count) }
+      column(:'총 판매 금액') { |order_info| currency_format order_info.cart.price_sum }
       column(:'셀러 수수료율(%)') do |order_info|
         items = order_info.sellers_items
-        (items.sum(:captured_retail_price) / items.map(&:item_sold_paper).sum(:adjusted_profit)).to_i.to_s << '%'
+        (items.sum(&:captured_retail_price) / items.map(&:item_sold_paper).sum(&:adjusted_profit)).to_i.to_s << '%'
       end
       column(:'셀러 수수료') do |order_info|
-        order_info.sellers_items.map(&:item_sold_paper).sum(:adjusted_profit)
+        currency_format order_info.sellers_items.map(&:item_sold_paper).sum(&:adjusted_profit)
       end
       column(:'주문 상태') do |order_info| order_info.order_status end
       column(:'일시') do |order_info| order_info.ordered_at&.strftime('%Y-%m-%d %H:%M:%S') end
