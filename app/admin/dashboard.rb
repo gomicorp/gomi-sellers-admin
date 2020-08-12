@@ -25,7 +25,7 @@ ActiveAdmin.register_page "Dashboard" do
           ul do
             Sellers::SettlementStatement.order(requested_at: :desc).first(5).map do |statement|
               li do
-                name = link_to(statement.seller_info.name, settlements_path(statement))
+                name = link_to(statement.seller_info.name, settlement_path(statement))
                 date = statement.requested_at.strftime('%Y/%m/%d')
                 status = statement.status
                 [name, status, date].join(dashboard_separator).html_safe
